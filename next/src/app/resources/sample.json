@@ -1,0 +1,269 @@
+{
+  "id": 839,
+  "url": "https://activismvhs.omeka.net/api/items/839",
+  "public": true,
+  "featured": false,
+  "added": "2019-03-28T15:21:11+00:00",
+  "modified": "2024-11-10T14:52:35+00:00",
+  "item_type": {
+    "id": 3,
+    "url": "https://activismvhs.omeka.net/api/item_types/3",
+    "name": "Moving Image",
+    "resource": "item_types"
+  },
+  "collection": {
+    "id": 3,
+    "url": "https://activismvhs.omeka.net/api/collections/3",
+    "resource": "collections"
+  },
+  "owner": {
+    "id": 41966,
+    "url": "https://activismvhs.omeka.net/api/users/41966",
+    "resource": "users"
+  },
+  "files": {
+    "count": 2,
+    "url": "https://activismvhs.omeka.net/api/files?item=839",
+    "resource": "files"
+  },
+  "tags": [
+    {
+      "id": 328,
+      "url": "https://activismvhs.omeka.net/api/tags/328",
+      "name": "1990",
+      "resource": "tags"
+    },
+    {
+      "id": 707,
+      "url": "https://activismvhs.omeka.net/api/tags/707",
+      "name": "A WAVE Taster",
+      "resource": "tags"
+    },
+    {
+      "id": 319,
+      "url": "https://activismvhs.omeka.net/api/tags/319",
+      "name": "activist video",
+      "resource": "tags"
+    },
+    {
+      "id": 650,
+      "url": "https://activismvhs.omeka.net/api/tags/650",
+      "name": "African American",
+      "resource": "tags"
+    },
+    {
+      "id": 304,
+      "url": "https://activismvhs.omeka.net/api/tags/304",
+      "name": "AIDS",
+      "resource": "tags"
+    },
+    {
+      "id": 120,
+      "url": "https://activismvhs.omeka.net/api/tags/120",
+      "name": "family",
+      "resource": "tags"
+    },
+    {
+      "id": 676,
+      "url": "https://activismvhs.omeka.net/api/tags/676",
+      "name": "WAVE",
+      "resource": "tags"
+    },
+    {
+      "id": 157,
+      "url": "https://activismvhs.omeka.net/api/tags/157",
+      "name": "woman filmmaker",
+      "resource": "tags"
+    }
+  ],
+  "element_texts": [
+    {
+      "html": false,
+      "text": "A WAVE Taster",
+      "element_set": {
+        "id": 1,
+        "url": "https://activismvhs.omeka.net/api/element_sets/1",
+        "name": "Dublin Core",
+        "resource": "element_sets"
+      },
+      "element": {
+        "id": 50,
+        "url": "https://activismvhs.omeka.net/api/elements/50",
+        "name": "Title",
+        "resource": "elements"
+      }
+    },
+    {
+      "html": false,
+      "text": "WAVE",
+      "element_set": {
+        "id": 3,
+        "url": "https://activismvhs.omeka.net/api/element_sets/3",
+        "name": "Item Type Metadata",
+        "resource": "element_sets"
+      },
+      "element": {
+        "id": 14,
+        "url": "https://activismvhs.omeka.net/api/elements/14",
+        "name": "Director",
+        "resource": "elements"
+      }
+    },
+    {
+      "html": true,
+      "text": "<div dir=\"ltr\">\n<div class=\"input-box\">\n<div class=\"cell-input editable\" id=\"waffle-rich-text-editor\" dir=\"ltr\"><span>Made as part of the WAVE project: clips from the various excercises we did to learn how to make video, and learn more about AIDS and each other. I write about the process of making our work together, in an AIDS support group at the Brooklyn AIDS Task Force, in chapter 6 of \"AIDS TV.\"<br /></span></div>\n</div>\n</div>",
+      "element_set": {
+        "id": 1,
+        "url": "https://activismvhs.omeka.net/api/element_sets/1",
+        "name": "Dublin Core",
+        "resource": "element_sets"
+      },
+      "element": {
+        "id": 41,
+        "url": "https://activismvhs.omeka.net/api/elements/41",
+        "name": "Description",
+        "resource": "elements"
+      }
+    },
+    {
+      "html": true,
+      "text": "<a href=\"https://brooklyn.njvid.net/show.php?pid=njcore:149946\" target=\"_blank\" rel=\"noreferrer noopener\"></a>",
+      "element_set": {
+        "id": 3,
+        "url": "https://activismvhs.omeka.net/api/element_sets/3",
+        "name": "Item Type Metadata",
+        "resource": "element_sets"
+      },
+      "element": {
+        "id": 28,
+        "url": "https://activismvhs.omeka.net/api/elements/28",
+        "name": "URL",
+        "resource": "elements"
+      }
+    },
+    {
+      "html": false,
+      "text": "1990",
+      "element_set": {
+        "id": 1,
+        "url": "https://activismvhs.omeka.net/api/element_sets/1",
+        "name": "Dublin Core",
+        "resource": "element_sets"
+      },
+      "element": {
+        "id": 40,
+        "url": "https://activismvhs.omeka.net/api/elements/40",
+        "name": "Date",
+        "resource": "elements"
+      }
+    },
+    {
+      "html": false,
+      "text": "AIDS, activist video, African American, family, woman filmmaker",
+      "element_set": {
+        "id": 1,
+        "url": "https://activismvhs.omeka.net/api/element_sets/1",
+        "name": "Dublin Core",
+        "resource": "element_sets"
+      },
+      "element": {
+        "id": 49,
+        "url": "https://activismvhs.omeka.net/api/elements/49",
+        "name": "Subject",
+        "resource": "elements"
+      }
+    },
+    {
+      "html": false,
+      "text": "VHS",
+      "element_set": {
+        "id": 1,
+        "url": "https://activismvhs.omeka.net/api/element_sets/1",
+        "name": "Dublin Core",
+        "resource": "element_sets"
+      },
+      "element": {
+        "id": 81,
+        "url": "https://activismvhs.omeka.net/api/elements/81",
+        "name": "Medium",
+        "resource": "elements"
+      }
+    },
+    {
+      "html": true,
+      "text": "<a href=\"http://actuporalhistory.org/index1.html\" target=\"_blank\" rel=\"noreferrer noopener\">ACT UP Oral History</a>",
+      "element_set": {
+        "id": 1,
+        "url": "https://activismvhs.omeka.net/api/element_sets/1",
+        "name": "Dublin Core",
+        "resource": "element_sets"
+      },
+      "element": {
+        "id": 73,
+        "url": "https://activismvhs.omeka.net/api/elements/73",
+        "name": "Is Referenced By",
+        "resource": "elements"
+      }
+    },
+    {
+      "html": true,
+      "text": "<a href=\"https://www.dukeupress.edu/aids-tv\">AIDS TV Identity, Community, and Alternative Video</a>",
+      "element_set": {
+        "id": 1,
+        "url": "https://activismvhs.omeka.net/api/element_sets/1",
+        "name": "Dublin Core",
+        "resource": "element_sets"
+      },
+      "element": {
+        "id": 73,
+        "url": "https://activismvhs.omeka.net/api/elements/73",
+        "name": "Is Referenced By",
+        "resource": "elements"
+      }
+    },
+    {
+      "html": false,
+      "text": "https://brooklyn-cuny.yuja.com/V/Video?v=11306297&node=50288428&a=115167513",
+      "element_set": {
+        "id": 3,
+        "url": "https://activismvhs.omeka.net/api/element_sets/3",
+        "name": "Item Type Metadata",
+        "resource": "element_sets"
+      },
+      "element": {
+        "id": 28,
+        "url": "https://activismvhs.omeka.net/api/elements/28",
+        "name": "URL",
+        "resource": "elements"
+      }
+    },
+    {
+      "html": true,
+      "text": "<br /><iframe width=\"560\" height=\"315\" title=\"Embedded Media titled: A WAVE Taster\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"></iframe>",
+      "element_set": {
+        "id": 3,
+        "url": "https://activismvhs.omeka.net/api/element_sets/3",
+        "name": "Item Type Metadata",
+        "resource": "element_sets"
+      },
+      "element": {
+        "id": 53,
+        "url": "https://activismvhs.omeka.net/api/elements/53",
+        "name": "Player",
+        "resource": "elements"
+      }
+    }
+  ],
+  "extended_resources": {
+    "comments": {
+      "count": 0,
+      "resource": "comments",
+      "url": "https://activismvhs.omeka.net/api/comments?record_type=Item&record_id=839"
+    },
+    "exhibit_pages": {
+      "count": 0,
+      "url": "https://activismvhs.omeka.net/api/exhibit_pages?item=839",
+      "resource": "exhibit_pages"
+    }
+  }
+}
