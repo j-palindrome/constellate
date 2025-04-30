@@ -9,7 +9,7 @@ import {
 } from 'child_process'
 import { promisify } from 'util'
 import ExcelJS from 'exceljs'
-import Importer from '@/services/createExporter'
+import Importer from '@/services/Importer'
 
 const roboto = Roboto({
   variable: '--font-roboto',
@@ -31,18 +31,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const response = await axios.request({
-    method: 'get',
-    maxBodyLength: Infinity,
-    url: 'https://activismvhs.omeka.net/api/items?collection=3',
-    headers: {}
-  })
-
-  const importer = new Importer()
-  // sample
-  importer.createCaData(response.data)
-  importer.runCaImport(response.data)
-
   return (
     <html lang='en'>
       <body className={`${roboto.variable} ${robotoMono.variable} antialiased`}>
