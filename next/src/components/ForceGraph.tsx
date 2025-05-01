@@ -10,6 +10,7 @@ import {
 } from '@react-three/fiber'
 import {
   CameraControls,
+  MapControls,
   OrbitControls,
   PresentationControls
 } from '@react-three/drei'
@@ -115,12 +116,18 @@ const Node = ({
   font: Font
 }) => {
   const [hovered, setHovered] = useState(false)
+  const isSelected = useAppStore(
+    state => state.selectedNode === record.identifier
+  )
 
   return (
     <group position={position} onClick={onClick}>
-      <mesh>
+      <mesh position={[15, -5, 0]}>
         <textGeometry
-          args={[record.title, { size: 1, font, depth: 0.1, curveSegments: 1 }]}
+          args={[
+            record.title,
+            { size: 10, font, depth: 0.1, curveSegments: 3 }
+          ]}
         />
         <meshBasicMaterial color='white' />
       </mesh>
@@ -133,10 +140,7 @@ const Node = ({
           transparent={true}
           opacity={0.8}
           metalness={10}
-          emissive={hovered ? 10 : 0}
-          // roughness={10}
-          // emissive={color}
-          // emissiveIntensity={hovered ? 0.5 : 0.2}
+          emissive={hovered ? 100 : 0}
         />
       </mesh>
     </group>
@@ -176,7 +180,7 @@ export default function ForceGraph({ records, groupBy }: ForceGraphProps) {
   const simulation = useRef<d3.Simulation<Node, Link> | null>(null)
   const [nodes, setNodes] = useState<Node[]>([])
   const [links, setLinks] = useState<Link[]>([])
-  const [selectedNode, setSelectedNode] = useState<Node | null>(null)
+  const selectedNode = useAppStore(state => state.selectedNode)
   const font = useMemo(() => {
     const loader = new Font(helvetiker)
     return loader
@@ -310,7 +314,7 @@ export default function ForceGraph({ records, groupBy }: ForceGraphProps) {
 
   return (
     <div className='h-full w-full bg-gray-900'>
-      <Canvas camera={{ position: [0, 0, 1000], fov: 50 }}>
+      <Canvas camera={{ position: [0, 0, 1000], up: [0, 0, 1] }}>
         <MovingLight />
 
         {/* Nodes */}
@@ -342,7 +346,7 @@ export default function ForceGraph({ records, groupBy }: ForceGraphProps) {
           )
         })}
 
-        {/* <CameraControls /> */}
+        <MapControls />
         <gridHelper
           args={[1000, 10, '#404040', '#404040']}
           rotation={[0.25 * Math.PI * 2, 0, 0]}

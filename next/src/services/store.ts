@@ -3,11 +3,13 @@ import { create } from 'zustand'
 // Define the store's state interface
 interface StoreState {
   convertedItems: DACSRecord[]
+  selectedNode: string | null
 }
 
 // Create the store
 export const useAppStore = create<StoreState>(set => ({
-  convertedItems: []
+  convertedItems: [],
+  selectedNode: null
 }))
 
 export const setters = {
