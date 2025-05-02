@@ -9,7 +9,6 @@ import {
   ThreeElement
 } from '@react-three/fiber'
 import {
-  CameraControls,
   MapControls,
   OrbitControls,
   PresentationControls
@@ -17,8 +16,8 @@ import {
 import * as THREE from 'three'
 import * as d3 from 'd3'
 import { forceSimulation } from 'd3'
-import { useAppStore } from '../services/store'
-import { Font, FontLoader, TextGeometry } from 'three/examples/jsm/Addons.js'
+import { setters, useAppStore } from '../services/store'
+import { Font, TextGeometry } from 'three/examples/jsm/Addons.js'
 import helvetiker from 'three/examples/fonts/helvetiker_regular.typeface.json'
 
 // MovingLight component that follows mouse position
@@ -99,29 +98,41 @@ declare module '@react-three/fiber' {
     textGeometry: ThreeElement<typeof TextGeometry>
   }
 }
-// Node component for 3D sphere representation
+
 const Node = ({
-  position,
+  nodeRef,
   color,
   radius,
   record,
   onClick,
   font
 }: {
-  position: [number, number, number]
+  nodeRef: React.RefObject<Node>
   color: string
   radius: number
   record: DACSRecord
-  onClick: () => void
+  onClick: (ev: MouseEvent) => void
   font: Font
 }) => {
+  const meshRef = useRef<THREE.Group>(null)
   const [hovered, setHovered] = useState(false)
   const isSelected = useAppStore(
     state => state.selectedNode === record.identifier
   )
 
+  // Imperatively update mesh position from nodeRef.current
+  useFrame(() => {
+    if (meshRef.current && nodeRef.current) {
+      meshRef.current.position.set(
+        nodeRef.current.x || 0,
+        nodeRef.current.y || 0,
+        nodeRef.current.z || 0
+      )
+    }
+  })
+
   return (
-    <group position={position} onClick={onClick}>
+    <group ref={meshRef} onClick={onClick}>
       <mesh position={[15, -5, 0]}>
         <textGeometry
           args={[
@@ -136,51 +147,22 @@ const Node = ({
         onPointerOut={() => setHovered(false)}>
         <sphereGeometry args={[radius, radius, radius]} />
         <meshStandardMaterial
-          color={color}
+          color={isSelected ? 'yellow' : 'white'}
           transparent={true}
           opacity={0.8}
           metalness={10}
-          emissive={hovered ? 100 : 0}
+          emissive={isSelected ? 100 : hovered ? 100 : 0}
         />
       </mesh>
     </group>
   )
 }
 
-// Link component for connections between nodes
-const Link = ({
-  start,
-  end,
-  color = '#cccccc'
-}: {
-  start: [number, number, number]
-  end: [number, number, number]
-  color?: string
-}) => {
-  const points = useMemo(() => {
-    const startVector = new THREE.Vector3(...start)
-    const endVector = new THREE.Vector3(...end)
-
-    // Create the geometry
-    const lineGeometry = new THREE.BufferGeometry().setFromPoints([
-      startVector,
-      endVector
-    ])
-    return lineGeometry
-  }, [start, end])
-
-  return (
-    <lineSegments geometry={points}>
-      <lineBasicMaterial attach='material' color={color} linewidth={1} />
-    </lineSegments>
-  )
-}
-
 export default function ForceGraph({ records, groupBy }: ForceGraphProps) {
   const simulation = useRef<d3.Simulation<Node, Link> | null>(null)
-  const [nodes, setNodes] = useState<Node[]>([])
+  const nodes = useRef<Node[]>([])
   const [links, setLinks] = useState<Link[]>([])
-  const selectedNode = useAppStore(state => state.selectedNode)
+  const selectedNodeId = useAppStore(state => state.selectedNode)
   const font = useMemo(() => {
     const loader = new Font(helvetiker)
     return loader
@@ -275,7 +257,7 @@ export default function ForceGraph({ records, groupBy }: ForceGraphProps) {
       }
     }
 
-    setNodes(newNodes)
+    nodes.current = newNodes
     setLinks(newLinks)
 
     // Initialize force simulation
@@ -299,7 +281,7 @@ export default function ForceGraph({ records, groupBy }: ForceGraphProps) {
       )
       .on('tick', () => {
         // Update node positions in state
-        setNodes(prev => [...prev])
+        nodes.current = [...newNodes]
       })
 
     return () => {
@@ -307,69 +289,130 @@ export default function ForceGraph({ records, groupBy }: ForceGraphProps) {
     }
   }, [records, groupBy])
 
-  // Helper to get 3D position from node
+  // Helper to get 3D position from node - just reads from ref
   const getNodePosition = (node: Node): [number, number, number] => {
     return [node.x || 0, node.y || 0, node.z || 0]
   }
+
+  const Link = ({
+    sourceRef,
+    targetRef,
+    color = '#cccccc'
+  }: {
+    sourceRef: React.RefObject<Node>
+    targetRef: React.RefObject<Node>
+    color?: string
+  }) => {
+    const lineRef = useRef<THREE.LineSegments>(null)
+    useFrame(() => {
+      if (lineRef.current && sourceRef.current && targetRef.current) {
+        const positions = lineRef.current.geometry.attributes.position.array
+        positions[0] = sourceRef.current.x || 0
+        positions[1] = sourceRef.current.y || 0
+        positions[2] = sourceRef.current.z || 0
+        positions[3] = targetRef.current.x || 0
+        positions[4] = targetRef.current.y || 0
+        positions[5] = targetRef.current.z || 0
+        lineRef.current.geometry.attributes.position.needsUpdate = true
+      }
+    })
+    // Initialize geometry with dummy positions
+    const geometry = useMemo(() => {
+      const geo = new THREE.BufferGeometry()
+      geo.setAttribute(
+        'position',
+        new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, 0], 3)
+      )
+      return geo
+    }, [])
+    return (
+      <lineSegments ref={lineRef} geometry={geometry}>
+        <lineBasicMaterial attach='material' color={color} linewidth={1} />
+      </lineSegments>
+    )
+  }
+
+  // Create refs for each node
+  const nodeRefs = useRef<{ [id: string]: React.RefObject<Node> }>({})
+  nodes.current.forEach(node => {
+    if (!nodeRefs.current[node.id]) {
+      nodeRefs.current[node.id] = { current: node }
+    } else {
+      nodeRefs.current[node.id].current = node
+    }
+  })
 
   return (
     <div className='h-full w-full bg-gray-900'>
       <Canvas camera={{ position: [0, 0, 1000], up: [0, 0, 1] }}>
         <MovingLight />
-
         {/* Nodes */}
-        {nodes.map(node => (
+        {nodes.current.map(node => (
           <Node
             font={font}
             key={node.id}
-            position={getNodePosition(node)}
+            nodeRef={nodeRefs.current[node.id]}
             color={node.color}
             radius={node.radius}
             record={node.record}
-            onClick={() => setSelectedNode(node === selectedNode ? null : node)}
+            onClick={(ev: MouseEvent) => {
+              setters.set({
+                selectedNode: selectedNodeId === node.id ? null : node.id
+              })
+              ev.stopImmediatePropagation()
+            }}
           />
         ))}
-
         {/* Links */}
         {links.map((link, index) => {
-          const sourceNode = nodes.find(n => n.id === link.source)
-          const targetNode = nodes.find(n => n.id === link.target)
-          if (!sourceNode || !targetNode) return null
-
+          const sourceRef = nodeRefs.current[link.source]
+          const targetRef = nodeRefs.current[link.target]
+          if (!sourceRef || !targetRef) return null
           return (
             <Link
               key={`link-${index}`}
-              start={getNodePosition(sourceNode)}
-              end={getNodePosition(targetNode)}
+              sourceRef={sourceRef}
+              targetRef={targetRef}
               color={link.value > 2 ? '#ffffff' : '#888888'}
             />
           )
         })}
-
         <MapControls />
         <gridHelper
           args={[1000, 10, '#404040', '#404040']}
           rotation={[0.25 * Math.PI * 2, 0, 0]}
         />
       </Canvas>
-
       {/* Information Panel */}
-      {selectedNode && (
+      {selectedNodeId && (
         <div className='absolute bottom-0 right-0 p-4 bg-black bg-opacity-70 text-white max-w-md m-4 rounded border border-white/50'>
-          <h3 className='text-xl font-bold'>{selectedNode.record.title}</h3>
+          <h3 className='text-xl font-bold'>
+            {nodes.current.find(node => node.id === selectedNodeId)?.record
+              .title || ''}
+          </h3>
           <div className='mt-2 text-sm'>
             <p>
-              {selectedNode.record.eventActors?.map(x => (
-                <span className='inline-block mr-2'>{x.name}</span>
-              ))}
+              {nodes.current
+                .find(node => node.id === selectedNodeId)
+                ?.record.eventActors?.map(x => (
+                  <span className='inline-block mr-2'>{x.name}</span>
+                ))}
             </p>
-            {selectedNode.record.scopeAndContent && (
+            {nodes.current.find(node => node.id === selectedNodeId)?.record
+              .scopeAndContent && (
               <p className='mt-2 max-h-[300px] overflow-auto mb-2'>
-                {selectedNode.record.scopeAndContent}
+                {
+                  nodes.current.find(node => node.id === selectedNodeId)?.record
+                    .scopeAndContent
+                }
               </p>
             )}
             <p className='text-sm'>
-              <strong>From</strong> {selectedNode.record.repository}
+              <strong>From</strong>{' '}
+              {
+                nodes.current.find(node => node.id === selectedNodeId)?.record
+                  .repository
+              }
             </p>
           </div>
         </div>

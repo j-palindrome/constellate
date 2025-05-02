@@ -13,6 +13,7 @@ export const useAppStore = create<StoreState>(set => ({
 }))
 
 export const setters = {
+  set: (state: Partial<StoreState>) => useAppStore.setState(state),
   setConvertedItems: items => useAppStore.setState({ convertedItems: items }),
   addItem: item =>
     useAppStore.setState(state => ({

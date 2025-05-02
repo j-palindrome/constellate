@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Roboto, Roboto_Mono } from 'next/font/google'
+import { Roboto, Roboto_Mono, Dosis } from 'next/font/google'
 import './globals.css'
 import axios from 'axios'
 import {
@@ -21,6 +21,11 @@ const robotoMono = Roboto_Mono({
   subsets: ['latin']
 })
 
+const dosis = Dosis({
+  variable: '--font-dosis',
+  subsets: ['latin']
+})
+
 export const metadata: Metadata = {
   title: 'Archilume',
   description: 'Archival Visualization'
@@ -33,9 +38,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${roboto.variable} ${robotoMono.variable} antialiased`}>
-        {children}
-      </body>
+      <body className={`${dosis.variable} antialiased`}>{children}</body>
     </html>
   )
 }

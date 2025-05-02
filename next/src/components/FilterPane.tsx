@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import FilterModal from './FilterModal'
+import { setters, useAppStore } from '@/services/store'
+import { convert } from 'three/tsl'
 
 interface FilterPaneProps {
   records: DACSRecord[]
@@ -39,10 +41,11 @@ export default function FilterPane({
   const [filters, setFilters] = useState<Filter[]>([])
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [groupBy, setGroupBy] = useState<string | null>(null)
+  const convertedItems = useAppStore(state => state.convertedItems)
 
   // Apply filters and search whenever they change
   useEffect(() => {
-    let result = [...records]
+    let result = [...convertedItems]
 
     // Apply text search across multiple fields
     if (searchQuery) {
@@ -119,7 +122,7 @@ export default function FilterPane({
     })
 
     onFilter(result)
-  }, [records, searchQuery, filters])
+  }, [searchQuery, filters])
 
   // Update parent component when grouping changes
   useEffect(() => {
@@ -134,13 +137,10 @@ export default function FilterPane({
     setFilters([...filters, newFilter])
     setIsFilterModalOpen(false)
   }
-
-  const removeFilter = (id: string) => {
-    setFilters(filters.filter(f => f.id !== id))
-  }
+  const selectedId = useAppStore(state => state.selectedNode)
 
   return (
-    <div className='h-full flex flex-col text-black *:text-black'>
+    <div className='h-full flex flex-col text-white *:text-white bg-gray-800'>
       <div className='p-4 border-b flex items-center justify-between'>
         <h2 className='text-lg font-medium'>Filters</h2>
         <button
@@ -161,8 +161,7 @@ export default function FilterPane({
         />
       </div>
 
-      {/* Filters */}
-      <div className='p-4 border-b'>
+      {/* <div className='p-4 border-b'>
         <div className='flex justify-between items-center mb-2'>
           <h3 className='font-medium'>Active Filters</h3>
           <button
@@ -194,7 +193,7 @@ export default function FilterPane({
         )}
       </div>
 
-      {/* Grouping options */}
+
       <div className='p-4 border-b'>
         <h3 className='font-medium mb-2'>Group By</h3>
         <div className='flex flex-wrap gap-2'>
@@ -211,34 +210,40 @@ export default function FilterPane({
             </button>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Records table */}
       <div className='flex-grow overflow-auto p-2'>
         <h3 className='font-medium mb-2'>Records</h3>
         <div className='border rounded overflow-hidden'>
           <table className='min-w-full divide-y divide-gray-200'>
-            <thead className='bg-gray-50'>
+            <thead className='bg-gray-800'>
               <tr>
                 <th className='px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   Title
-                </th>
-                <th className='px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Level
                 </th>
                 <th className='px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                   Repository
                 </th>
               </tr>
             </thead>
-            <tbody className='bg-white divide-y divide-gray-200'>
-              {records.slice(0, 20).map((record, i) => (
-                <tr key={record.identifier || i} className='hover:bg-gray-50'>
+            <tbody className='divide-y bg-gray-800'>
+              {records.map((record, i) => (
+                <tr
+                  onClick={() => {
+                    // Handle row click
+                    setters.set({
+                      selectedNode:
+                        selectedId === record.identifier
+                          ? null
+                          : record.identifier
+                    })
+                  }}
+                  key={record.identifier || i}
+                  className='hover:!bg-gray-50/50 transition-colors duration-100 cursor-pointer *:cursor-pointer select-none'>
                   <td className='px-3 py-2 whitespace-nowrap text-sm'>
-                    {record.title}
-                  </td>
-                  <td className='px-3 py-2 whitespace-nowrap text-sm'>
-                    {record.levelOfDescription}
+                    {record.title.slice(0, 30) +
+                      (record.title.length > 30 ? '...' : '')}
                   </td>
                   <td className='px-3 py-2 whitespace-nowrap text-sm'>
                     {record.repository}
